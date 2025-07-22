@@ -12,13 +12,13 @@ model Player {
   name     String
   nickname String   @unique
   email    String   @unique
-  matchId  String?  @unique
+  matchId  String?
   match    Match?   @relation(fields: [matchId], references: [id])
 }
 
 model Match {
   id        String     @id @default(uuid())
-  name      String
+  name      String     @unique
   state     MatchState @default(WAITING)
   startDate DateTime?
   scores    Json?
