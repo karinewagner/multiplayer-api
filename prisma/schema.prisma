@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id       String   @id @default(uuid())
+  name     String
+  nickname String
+  email    String   @unique
+  matchId  String?  @unique
+  match    Match?   @relation(fields: [matchId], references: [id])
+}
+
+model Match {
+  id        String     @id @default(uuid())
+  name      String
+  state     MatchState @default(WAITING)
+  startDate DateTime?
+  scores    Json?
+  players   Player[]
+}
+
+enum MatchState {
+  WAITING
+  IN_PROGRESS
+  FINISHED
+}
