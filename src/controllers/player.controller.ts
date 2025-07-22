@@ -26,7 +26,9 @@ export const PlayerController = {
     try {
       const player = await PlayerRepository.createPlayer({ name, nickname, email, matchId });
 
-      return res.status(201).json(player);
+      const { id, ...playersView } = player;
+
+      return res.status(201).json(playersView);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2002") {
