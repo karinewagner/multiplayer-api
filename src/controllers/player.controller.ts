@@ -12,9 +12,9 @@ export const PlayerController = {
         return res.status(404).json({ message: "Nenhum jogador encontrado" });
       }
 
-      const sanitizedPlayers = players.map(({ id, ...rest }) => rest);
+      const playersView  = players.map(({ id, ...rest }) => rest);
 
-      res.json(sanitizedPlayers);
+      res.json(playersView);
     } catch (error) {
       res.status(500).json({ message: "Erro interno do servidor" });
     }
@@ -50,7 +50,9 @@ export const PlayerController = {
 
       if (!player) return res.status(404).json({ error: 'Jogador não localizado!' });
 
-      res.status(200).json(player);
+      const { id, ...playersView } = player;
+
+      res.status(200).json(playersView);
     } catch (error) {
       res.status(500).json({ message: "Erro interno do servidor" });
     }
@@ -58,23 +60,47 @@ export const PlayerController = {
 
   updatePlayerById: async (req: Request, res: Response) => {
     try {
-      const updated = await PlayerRepository.updatePlayerById(req.params.id, req.body);
-      
-      if (!updated) return res.status(404).json({ error: 'Jogador não localizado!' });
+      const result = await PlayerRepository.updatePlayerById(req.params.id, req.body);
 
-      res.status(200).json(updated);
+      if (!result.player) {
+        if (result.reason === "NOT_FOUND") {
+          return res.status(404).json({ error: "Jogador não encontrado." });
+        }
+        if (result.reason === "IN_MATCH") {
+          return res.status(400).json({ error: "Jogador está em uma partida e não pode ser atualizado." });
+        }
+        return res.status(500).json({ error: "Erro ao atualizar jogador." });
+      }
+
+      const { id, ...playerView } = result.player;
+      res.status(200).json({
+        message: "Dados atualizado com sucesso!",
+        updatePlayer: playerView
+      });
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: "Erro interno do servidor" });
     }
   },
 
   deletePlayerById: async (req: Request, res: Response) => {
     try {
-      await PlayerRepository.deletePlayerById(req.params.id);
+      const result = await PlayerRepository.deletePlayerById(req.params.id);
 
-      res.status(204).send();
+      if (!result.success) {
+        if (result.reason === "NOT_FOUND") {
+          return res.status(404).json({ error: "Jogador não encontrado para exclusão." });
+        }
+        if (result.reason === "IN_MATCH") {
+          return res.status(400).json({ error: "Jogador não pode ser excluído, pois está em uma partida." });
+        }
+        return res.status(500).json({ error: "Erro ao excluir jogador." });
+      }
+
+      res.status(200).json({ message: "Jogador excluído com sucesso!" });
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: "Erro interno do servidor" });
     }
-  }
+  },
 };
