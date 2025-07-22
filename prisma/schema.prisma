@@ -10,7 +10,7 @@ datasource db {
 model Player {
   id       String   @id @default(uuid())
   name     String
-  nickname String
+  nickname String   @unique
   email    String   @unique
   matchId  String?  @unique
   match    Match?   @relation(fields: [matchId], references: [id])
