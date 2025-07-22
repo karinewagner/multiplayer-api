@@ -1,0 +1,12 @@
+# Dependências
+node_modules/
+
+# Build
+dist/
+
+# Banco de dados do Prisma
+prisma/dev.db
+prisma/migrations/
+
+# Variáveis de ambiente
+.env
