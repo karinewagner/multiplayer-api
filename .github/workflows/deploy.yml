@@ -1,33 +1,32 @@
-name: CI/CD Deploy
+name: Deploy para Render
 
 on:
   push:
     branches:
-      - main  # Ou a branch principal do seu projeto
+      - main  # Roda o deploy quando houver push na branch main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout código
+      - name: Clonar o repositório
         uses: actions/checkout@v3
 
-      - name: Instalar Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
       - name: Instalar dependências
-        run: npm install
-
-      - name: Rodar testes (opcional)
-        run: npm test
+        run: npm ci
 
       - name: Build do projeto
         run: npm run build
 
+      - name: Gerar client do Prisma
+        run: npx prisma generate
+
+      - name: Aplicar migrações Prisma
+        run: npx prisma migrate deploy
+
       - name: Deploy no Render
         uses: johnbeynon/render-deploy-action@v1
         with:
-          service-id: ${{ secrets.RENDER_SERVICE_ID }}
-          api-key: ${{ secrets.RENDER_API_KEY }}
+          apiKey: ${{ secrets.RENDER_API_KEY }}
+          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
