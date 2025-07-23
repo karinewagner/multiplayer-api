@@ -64,9 +64,9 @@ npm install
 ```
 
 ### **3. Configurar variáveis de ambiente**
-Crie um arquivo `.env` na raiz do projeto com:
+Cria um arquivo `.env` na raiz do projeto:
 ```env
-DATABASE_URL="file:./dev.db"
+cp .env.example .env
 ```
 
 ### **4. Configurar banco de dados**
@@ -86,6 +86,12 @@ O servidor estará disponível em:
 
 O Swagger estará disponível em:  
 **http://localhost:3000/api-docs**
+
+---
+## **🌐 API hospedada (Render)**
+Você pode acessar a API pronta sem rodar nada localmente:
+
+🔗 Swagger: **https://sua-api-no-render.onrender.com/api-docs**
 
 ---
 
