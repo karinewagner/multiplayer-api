@@ -4,7 +4,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API Multiplayer',
+      title: 'Multiplayer API',
       version: '1.0.0',
     },
     components: {
@@ -77,7 +77,12 @@ const options = {
         },
       },
     },
-    servers: [{ url: 'http://localhost:3000' }],
+    servers: [
+      {
+        url: process.env.BASE_URL || 'http://localhost:3000',
+        description: 'API Server'
+      }
+    ],
   },
   apis: ['./src/routes/*.ts'],
 };

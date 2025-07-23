@@ -5,6 +5,9 @@ import { swaggerSpec } from './config/swagger-options';
 import playerRoutes from './routes/player.routes';
 import matchRoutes from './routes/match.routes';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 const app = express();
 app.use(express.json());
 
@@ -20,7 +23,8 @@ app.get('/swagger.json', (req, res) => {
   res.send(swaggerSpec);
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
