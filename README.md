@@ -9,7 +9,7 @@ Uma API REST para gerenciar partidas multiplayer, permitindo cadastrar jogadores
 - **Express**
 - **TypeScript**
 - **Prisma ORM**
-- **SQLite (banco de desenvolvimento)**
+- **Postgres**
 - **Swagger UI**
 
 ---
@@ -45,7 +45,6 @@ src/
  ├── app.ts          # Configuração principal do servidor
 prisma/
  ├── migrations/     # Histórico das migrações aplicadas ao banco
- ├── dev.db          # Banco de dados SQLite (ambiente de desenvolvimento)
  ├── schema.prisma   # Definição do schema do banco de dados
 ```
 
