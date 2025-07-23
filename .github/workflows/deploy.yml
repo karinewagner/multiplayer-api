@@ -1,0 +1,33 @@
+name: CI/CD Deploy
+
+on:
+  push:
+    branches:
+      - main  # Ou a branch principal do seu projeto
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Rodar testes (opcional)
+        run: npm test
+
+      - name: Build do projeto
+        run: npm run build
+
+      - name: Deploy no Render
+        uses: johnbeynon/render-deploy-action@v1
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
