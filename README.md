@@ -7,9 +7,10 @@ Uma API REST para gerenciar partidas multiplayer, permitindo cadastrar jogadores
 ## **📌 Tecnologias**
 - **Node.js**
 - **Express**
+- **TypeScript**
 - **Prisma ORM**
 - **SQLite (banco de desenvolvimento)**
-- **TypeScript**
+- **Swagger UI**
 
 ---
 
@@ -34,6 +35,7 @@ Uma API REST para gerenciar partidas multiplayer, permitindo cadastrar jogadores
 ## **📂 Estrutura de Pastas**
 ```
 src/
+ ├── config/         # Configuração Swagger
  ├── controllers/    # Lida com as requisições HTTP
  ├── database/       # Instância e configuração de conexão com o banco de dados
  ├── middlewares/    # Middlewares para validações e tratamento de requisições
@@ -78,8 +80,12 @@ npx prisma generate
 ```bash
 npm run dev
 ```
+
 O servidor estará disponível em:  
 **http://localhost:3000**
+
+O Swagger estará disponível em:  
+**http://localhost:3000/api-docs**
 
 ---
 
@@ -97,35 +103,6 @@ O servidor estará disponível em:
 - **POST** `/matches/:matchId/leave/:playerId` – Remover jogador da partida.
 - **POST** `/matches/:matchId/start` – Iniciar a partida.
 - **POST** `/matches/:matchId/finish` – Finalizar partida com `scores`
-
----
-
-## **📝 Exemplo de Requisição com cURL**
-### Criar um jogador:
-```bash
-curl -X POST http://localhost:3000/players \
-  -H "Content-Type: application/json" \
-  -d '{"name": "João Silva", "nickname": "joao", "email": "joao@email.com"}'
-```
-
-### Criar uma partida:
-```bash
-curl -X POST http://localhost:3000/matches \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Partida 1"}'
-```
-
-### Finalizar partida com scores:
-```bash
-curl -X POST http://localhost:3000/matches/{matchId}/finish \
-  -H "Content-Type: application/json" \
-  -d '{
-    "scores": {
-      "5f6efe32-8f48-4931-88f9-dcea8d485fb3": 5,
-      "46eb914c-752f-4499-9bfd-4fd1dd2a473f": 10
-    }
-  }'
-```
 
 ---
 
