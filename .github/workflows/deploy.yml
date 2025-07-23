@@ -9,20 +9,26 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
-      - name: Checkout do código
+      - name: 📥 Checkout do código
         uses: actions/checkout@v3
 
-      - name: Instalar dependências
+      - name: 📦 Instalar dependências
         run: npm install
 
-      - name: Build do projeto
-        run: npm run build
+      - name: 🛠️ Gerar Prisma Client
+        run: npx prisma generate
 
-      - name: Executar migrações
+      - name: 🔄 Aplicar migrações Prisma
         run: npx prisma migrate deploy
 
-      - name: Disparar deploy na Render via API
+      - name: 🏗️ Build do projeto
+        run: npm run build
+
+      - name: 🚀 Disparar deploy na Render via API
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
           RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
