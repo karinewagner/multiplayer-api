@@ -1,6 +1,6 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerSpec } from './config/swaggerOptions';
+import { swaggerSpec } from './config/swagger-options';
 
 import playerRoutes from './routes/player.routes';
 import matchRoutes from './routes/match.routes';
