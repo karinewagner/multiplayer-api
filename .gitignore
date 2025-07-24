@@ -6,3 +6,5 @@ dist/
 
 # Variáveis de ambiente
 .env
+
+coverage/
