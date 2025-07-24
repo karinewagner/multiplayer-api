@@ -1,5 +1,7 @@
 import { prisma } from '../database/prisma';
 import { Player } from '@prisma/client';
+import { NotFoundError } from '../errors/notFound.error';
+import { ValidationError } from '../errors/validation.error';
 
 export const PlayerRepository = {
   findAllPlayers: async (): Promise<Player[]> => {
@@ -7,57 +9,41 @@ export const PlayerRepository = {
   },
 
   createPlayer: async (data: Omit<Player, 'id'>): Promise<Player> => {
-    return await prisma.player.create({data});
+    return await prisma.player.create({ data });
   },
 
   findPlayerById: async (id: string): Promise<Player | null> => {
     return await prisma.player.findUnique({ where: { id } });
   },
 
-  updatePlayerById: async (
-    id: string,
-    data: Partial<Player>
-  ): Promise<{ player?: Player; reason?: string }> => {
-    try {
-      const player = await prisma.player.findUnique({ where: { id } });
+  updatePlayerById: async (id: string, data: Partial<Player>): Promise<Player> => {
+    const player = await prisma.player.findUnique({ where: { id } });
 
-      if (!player) {
-        return { reason: "NOT_FOUND" };
-      }
-
-      if (player.matchId) {
-        return { reason: "IN_MATCH" };
-      }
-
-      const updatedPlayer = await prisma.player.update({
-        where: { id },
-        data,
-      });
-
-      return { player: updatedPlayer };
-    } catch (error) {
-      console.error("Erro ao atualizar jogador:", error);
-      return { reason: "ERROR" };
+    if (!player) {
+      throw new NotFoundError('Jogador não encontrado.');
     }
+
+    if (player.matchId) {
+      throw new ValidationError('Jogador está em uma partida e não pode ser atualizado.');
+    }
+
+    return await prisma.player.update({
+      where: { id },
+      data,
+    });
   },
 
-  deletePlayerById: async (id: string): Promise<{ success: boolean; reason?: string }> => {
-    try {
-      const player = await prisma.player.findUnique({ where: { id } });
+  deletePlayerById: async (id: string): Promise<void> => {
+    const player = await prisma.player.findUnique({ where: { id } });
 
-      if (!player) {
-        return { success: false, reason: "NOT_FOUND" };
-      }
-
-      if (player.matchId) {
-        return { success: false, reason: "IN_MATCH" };
-      }
-
-      await prisma.player.delete({ where: { id } });
-      return { success: true };
-    } catch (error) {
-      console.error("Erro ao excluir jogador:", error);
-      return { success: false, reason: "ERROR" };
+    if (!player) {
+      throw new NotFoundError('Jogador não encontrado.');
     }
+
+    if (player.matchId) {
+      throw new ValidationError('Jogador não pode ser excluído pois está em uma partida.');
+    }
+
+    await prisma.player.delete({ where: { id } });
   },
 };
