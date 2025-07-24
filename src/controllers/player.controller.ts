@@ -49,20 +49,16 @@ export const PlayerController = {
   },
 
   updatePlayerById: async (req: Request, res: Response) => {
-    const result = await PlayerRepository.updatePlayerById(req.params.id, req.body);
+    const playerId = req.params.id;
 
-    if (!result.player) {
-      switch (result.reason) {
-        case 'NOT_FOUND':
-          throw new NotFoundError('Jogador não encontrado.');
-        case 'IN_MATCH':
-          throw new ValidationError('Jogador está em uma partida e não pode ser atualizado.');
-        default:
-          throw new Error('Erro ao atualizar jogador.');
-      }
+    if (!playerId) {
+      throw new ValidationError('ID do jogador é obrigatório.');
     }
 
-    const { id, ...playerView } = result.player;
+    const player = await PlayerRepository.updatePlayerById(playerId, req.body);
+
+    const { id, ...playerView } = player;
+
     res.status(200).json({
       message: 'Dados atualizados com sucesso!',
       updatePlayer: playerView,
@@ -70,18 +66,13 @@ export const PlayerController = {
   },
 
   deletePlayerById: async (req: Request, res: Response) => {
-    const result = await PlayerRepository.deletePlayerById(req.params.id);
+    const playerId = req.params.id;
 
-    if (!result.success) {
-      switch (result.reason) {
-        case 'NOT_FOUND':
-          throw new NotFoundError('Jogador não encontrado para exclusão.');
-        case 'IN_MATCH':
-          throw new ValidationError('Jogador não pode ser excluído, pois está em uma partida.');
-        default:
-          throw new Error('Erro ao excluir jogador.');
-      }
+    if (!playerId) {
+      throw new ValidationError('ID do jogador é obrigatório.');
     }
+
+    await PlayerRepository.deletePlayerById(playerId);
 
     res.status(200).json({ message: 'Jogador excluído com sucesso!' });
   },
