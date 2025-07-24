@@ -1,23 +1,20 @@
 import { Request, Response } from 'express';
-import { Prisma } from "@prisma/client";
+import { Prisma } from '@prisma/client';
 
 import { PlayerRepository } from '../repositories/player.repository';
+import { NotFoundError } from '../errors/notFound.error';
+import { ConflictError } from '../errors/conflict.error';
+import { ValidationError } from '../errors/validation.error';
 
 export const PlayerController = {
   getPlayersList: async (req: Request, res: Response) => {
-    try {
-      const players = await PlayerRepository.findAllPlayers();
+    const players = await PlayerRepository.findAllPlayers();
 
-      if (players.length === 0) {
-        return res.status(404).json({ message: "Nenhum jogador encontrado" });
-      }
-
-      const playersView  = players.map(({ id, ...rest }) => rest);
-
-      res.json(playersView);
-    } catch (error) {
-      res.status(500).json({ message: "Erro interno do servidor" });
+    if (players.length === 0) {
+      throw new NotFoundError('Nenhum jogador encontrado');
     }
+
+    res.json(players);
   },
 
   createPlayer: async (req: Request, res: Response) => {
@@ -25,84 +22,67 @@ export const PlayerController = {
 
     try {
       const player = await PlayerRepository.createPlayer({ name, nickname, email, matchId });
+      const { id, ...playerView } = player;
+      res.status(201).json(playerView);
+    } catch (error: any) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        const field = Array.isArray(error.meta?.target) ? error.meta.target[0] : undefined;
+        const message = field === 'email'
+          ? 'Este e-mail já está em uso.'
+          : field === 'nickname'
+            ? 'Este nickname já está em uso.'
+            : 'Campo duplicado.';
 
-      const { id, ...playersView } = player;
-
-      return res.status(201).json(playersView);
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === "P2002") {
-              const field = Array.isArray(error.meta?.target) ? error.meta.target[0] : undefined;
-
-              if (field === "email") {
-                return res.status(400).json({ error: "Este e-mail já está em uso." });
-
-              } else if (field === "nickname") {
-                return res.status(400).json({ error: "Este nickname já está em uso." });
-              }
-        }
+        throw new ConflictError(message);
       }
-      return res.status(500).json({ error: "Erro interno no servidor." });
+
+      throw error;
     }
   },
 
   getPlayerById: async (req: Request, res: Response) => {
-    try {
-      const player = await PlayerRepository.findPlayerById(req.params.id);
+    const player = await PlayerRepository.findPlayerById(req.params.id);
+    if (!player) throw new NotFoundError('Jogador não localizado');
 
-      if (!player) return res.status(404).json({ error: 'Jogador não localizado!' });
-
-      const { id, ...playersView } = player;
-
-      res.status(200).json(playersView);
-    } catch (error) {
-      res.status(500).json({ message: "Erro interno do servidor" });
-    }
+    const { id, ...playerView } = player;
+    res.status(200).json(playerView);
   },
 
   updatePlayerById: async (req: Request, res: Response) => {
-    try {
-      const result = await PlayerRepository.updatePlayerById(req.params.id, req.body);
+    const result = await PlayerRepository.updatePlayerById(req.params.id, req.body);
 
-      if (!result.player) {
-        if (result.reason === "NOT_FOUND") {
-          return res.status(404).json({ error: "Jogador não encontrado." });
-        }
-        if (result.reason === "IN_MATCH") {
-          return res.status(400).json({ error: "Jogador está em uma partida e não pode ser atualizado." });
-        }
-        return res.status(500).json({ error: "Erro ao atualizar jogador." });
+    if (!result.player) {
+      switch (result.reason) {
+        case 'NOT_FOUND':
+          throw new NotFoundError('Jogador não encontrado.');
+        case 'IN_MATCH':
+          throw new ValidationError('Jogador está em uma partida e não pode ser atualizado.');
+        default:
+          throw new Error('Erro ao atualizar jogador.');
       }
-
-      const { id, ...playerView } = result.player;
-      res.status(200).json({
-        message: "Dados atualizado com sucesso!",
-        updatePlayer: playerView
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Erro interno do servidor" });
     }
+
+    const { id, ...playerView } = result.player;
+    res.status(200).json({
+      message: 'Dados atualizados com sucesso!',
+      updatePlayer: playerView,
+    });
   },
 
   deletePlayerById: async (req: Request, res: Response) => {
-    try {
-      const result = await PlayerRepository.deletePlayerById(req.params.id);
+    const result = await PlayerRepository.deletePlayerById(req.params.id);
 
-      if (!result.success) {
-        if (result.reason === "NOT_FOUND") {
-          return res.status(404).json({ error: "Jogador não encontrado para exclusão." });
-        }
-        if (result.reason === "IN_MATCH") {
-          return res.status(400).json({ error: "Jogador não pode ser excluído, pois está em uma partida." });
-        }
-        return res.status(500).json({ error: "Erro ao excluir jogador." });
+    if (!result.success) {
+      switch (result.reason) {
+        case 'NOT_FOUND':
+          throw new NotFoundError('Jogador não encontrado para exclusão.');
+        case 'IN_MATCH':
+          throw new ValidationError('Jogador não pode ser excluído, pois está em uma partida.');
+        default:
+          throw new Error('Erro ao excluir jogador.');
       }
-
-      res.status(200).json({ message: "Jogador excluído com sucesso!" });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Erro interno do servidor" });
     }
+
+    res.status(200).json({ message: 'Jogador excluído com sucesso!' });
   },
 };
