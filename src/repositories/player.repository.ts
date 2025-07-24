@@ -23,7 +23,10 @@ export const PlayerRepository = {
       throw new NotFoundError('Jogador não encontrado.');
     }
 
-    if (player.matchId) {
+    const isLeavingMatchOnly =
+      player.matchId && Object.keys(data).length === 1 && data.matchId === null;
+
+    if (player.matchId && !isLeavingMatchOnly) {
       throw new ValidationError('Jogador está em uma partida e não pode ser atualizado.');
     }
 
