@@ -7,7 +7,11 @@
     "start": "prisma migrate deploy && node dist/app.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "postinstall": "prisma generate",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:unit": "jest -c jest.config.unit.ts",
+    "test:integration": "jest -c jest.config.integration.ts",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -24,12 +28,20 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.0.15",
+    "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
+    "jest": "^30.0.5",
     "prisma": "^6.12.0",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
+  },
+  "jest": {
+    "preset": "ts-jest"
   }
 }
