@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { PlayerController } from '../controllers/player.controller';
-import { validatePlayer } from '../middlewares/player.validator.middleware';
+import { validatePlayer } from '../middlewares/validate-player.middleware';
 
 const router = Router();
 

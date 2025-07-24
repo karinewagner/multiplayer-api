@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { MatchController } from '../controllers/match.controller';
-import { validateMatch } from "../middlewares/match.validator.middleware";
-import { validateFinishMatch } from '../middlewares/finish.validator.middleware';
+import { validateMatch } from "../middlewares/validate-match.middleware";
+import { validateFinishMatch } from '../middlewares/validate-finish.middleware';
 
 const router = Router();
 
