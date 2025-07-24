@@ -26,11 +26,17 @@ app.get('/swagger.json', (req, res) => {
 // Middleware de tratamento de erros (deve ficar por último)
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (err instanceof DomainError) {
-    return res.status(err.statusCode).json({ error: err.message });
+    return res.status(err.statusCode).json({
+      error: err.name,
+      message: err.message,
+    });
   }
 
   console.error('Erro não tratado:', err);
-  return res.status(500).json({ error: 'Erro interno no servidor.' });
+  return res.status(500).json({
+    error: 'InternalServerError',
+    message: 'Erro interno no servidor.',
+  });
 });
 
 const PORT = process.env.PORT || 3000;
