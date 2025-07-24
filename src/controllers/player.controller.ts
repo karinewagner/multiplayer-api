@@ -25,7 +25,7 @@ export const PlayerController = {
       const { id, ...playerView } = player;
       res.status(201).json(playerView);
     } catch (error: any) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      if (error.code === 'P2002') {
         const field = Array.isArray(error.meta?.target) ? error.meta.target[0] : undefined;
         const message = field === 'email'
           ? 'Este e-mail já está em uso.'
