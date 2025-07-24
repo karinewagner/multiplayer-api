@@ -1,58 +1,58 @@
+import { MatchState } from '@prisma/client';
 import { prisma } from '../database/prisma';
-import { MatchState, Match } from '@prisma/client';
+import { MatchWithPlayers } from '../types/match.type';
 
 export const MatchRepository = {
-  findAllMatches: async (): Promise<Match[]> => {
-    return await prisma.match.findMany({ include: { players: true } })
+  findAllMatches: async (): Promise<MatchWithPlayers[]> => {
+    return await prisma.match.findMany({ include: { players: true } });
   },
 
-  findMatchById: async (id: string) => {
-    return await prisma.match.findUnique({ where: { id }, include: { players: true } })
+  findMatchById: async (id: string): Promise<MatchWithPlayers | null> => {
+    return await prisma.match.findUnique({ where: { id }, include: { players: true } });
   },
 
-  findOpenMatches: async () => {
-    return await prisma.match.findMany({ where: { state: MatchState.WAITING }, include: { players: true } })
-  },
-
-  findMatchByName: async (name: string): Promise<Match | null> => {
-    return await prisma.match.findUnique({
-      where: {
-        name: name,
-      },
+  findOpenMatches: async (): Promise<MatchWithPlayers[]> => {
+    return await prisma.match.findMany({
+      where: { state: MatchState.WAITING },
+      include: { players: true },
     });
   },
 
-  createMatch: async (name: string) => {
-    return await prisma.match.create({ data: { name } })
+  findMatchByName: async (name: string) => {
+    return await prisma.match.findUnique({ where: { name } });
   },
 
-  updateMatchById: async (id: string, data: any) => {
-    return await prisma.match.update({ where: { id }, data })
+  createMatch: async (name: string) => {
+    return await prisma.match.create({ data: { name } });
   },
-  
+
+  updateMatchById: async (id: string, data: any): Promise<MatchWithPlayers> => {
+    return await prisma.match.update({
+      where: { id },
+      data,
+      include: { players: true },
+    });
+  },
+
   deleteMatchById: async (id: string) => {
-    return await prisma.match.delete({ where: { id } })
+    return await prisma.match.delete({ where: { id } });
   },
-  
-  addPlayerToMatch: async (matchId: string, playerId: string) => {
+
+  addPlayerToMatch: async (matchId: string, playerId: string): Promise<MatchWithPlayers> => {
     return await prisma.match.update({
       where: { id: matchId },
       data: {
-        players: {
-          connect: { id: playerId },
-        },
+        players: { connect: { id: playerId } },
       },
       include: { players: true },
     });
   },
 
-  removePlayerFromMatch: async (matchId: string, playerId: string) => {
+  removePlayerFromMatch: async (matchId: string, playerId: string): Promise<MatchWithPlayers> => {
     return await prisma.match.update({
       where: { id: matchId },
       data: {
-        players: {
-          disconnect: { id: playerId },
-        },
+        players: { disconnect: { id: playerId } },
       },
       include: { players: true },
     });
