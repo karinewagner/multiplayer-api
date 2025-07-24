@@ -3,12 +3,15 @@ import { NotFoundError } from '../errors/notFound.error';
 import { ValidationError } from '../errors/validation.error';
 import { MatchRepository } from '../repositories/match.repository';
 import { PlayerRepository } from '../repositories/player.repository';
-import { Match, MatchState } from '@prisma/client';
+
+import { MatchState } from '@prisma/client';
+import { MatchWithPlayers } from '../types/match.type';
+
 
 type Scores = { [playerId: string]: number };
 
 export const MatchService = {
-  async joinMatch(matchId: string, playerId: string): Promise<Match | null> {
+  async joinMatch(matchId: string, playerId: string): Promise<MatchWithPlayers> {
     const [player, match] = await Promise.all([
       PlayerRepository.findPlayerById(playerId),
       MatchRepository.findMatchById(matchId),
@@ -21,10 +24,11 @@ export const MatchService = {
     if (match.players.length >= 4) throw new ConflictError('A partida já está cheia (máximo de 4 jogadores).');
 
     await PlayerRepository.updatePlayerById(playerId, { matchId });
-    return MatchRepository.findMatchById(matchId);
+
+    return await MatchRepository.findMatchById(matchId) as MatchWithPlayers;
   },
 
-  async leaveMatch(matchId: string, playerId: string): Promise<Match | null> {
+  async leaveMatch(matchId: string, playerId: string): Promise<MatchWithPlayers> {
     const [player, match] = await Promise.all([
       PlayerRepository.findPlayerById(playerId),
       MatchRepository.findMatchById(matchId),
@@ -39,12 +43,12 @@ export const MatchService = {
       MatchRepository.removePlayerFromMatch(matchId, playerId),
     ]);
 
-    return MatchRepository.findMatchById(matchId);
+    return await MatchRepository.findMatchById(matchId) as MatchWithPlayers;
   },
 
-  async startMatch(matchId: string): Promise<Match | null> {
-    const match = await MatchRepository.findMatchById(matchId);
-    if (!match) return null;
+  async startMatch(matchId: string): Promise<MatchWithPlayers> {
+    const match = await MatchRepository.findMatchById(matchId) as MatchWithPlayers;
+    if (!match) throw new NotFoundError('Partida não encontrada.');
 
     switch (match.state) {
       case MatchState.IN_PROGRESS:
@@ -62,12 +66,12 @@ export const MatchService = {
       startDate: new Date(),
     });
 
-    return MatchRepository.findMatchById(matchId);
+    return await MatchRepository.findMatchById(matchId) as MatchWithPlayers;
   },
 
-  async finishMatch(matchId: string, scores: Scores): Promise<Match | null> {
-    const match = await MatchRepository.findMatchById(matchId);
-    if (!match) return null;
+  async finishMatch(matchId: string, scores: Scores): Promise<MatchWithPlayers> {
+    const match = await MatchRepository.findMatchById(matchId) as MatchWithPlayers;
+    if (!match) throw new NotFoundError('Partida não encontrada.');
 
     if (match.state === MatchState.WAITING) {
       throw new ConflictError('A partida não foi inicializada.');
@@ -103,11 +107,12 @@ export const MatchService = {
       )
     );
 
-    return MatchRepository.findMatchById(matchId);
+    return await MatchRepository.findMatchById(matchId) as MatchWithPlayers;
   },
 
-  async getPlayerHistory(playerId: string): Promise<Match[]> {
-    const allMatches = await MatchRepository.findAllMatches();
+  async getPlayerHistory(playerId: string): Promise<MatchWithPlayers[]> {
+    const allMatches = await MatchRepository.findAllMatches() as MatchWithPlayers[];
+
     return allMatches.filter(
       m =>
         m.state === MatchState.FINISHED &&
