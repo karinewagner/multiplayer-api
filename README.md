@@ -5,13 +5,15 @@ Uma API REST para gerenciar partidas multiplayer, permitindo efetuar o CRUD de j
 ---
 
 ## **📌 Tecnologias**
-- **Node.js**
-- **Express**
-- **TypeScript**
-- **Prisma ORM**
-- **Postgres**
-- **Swagger UI**
-- **Jest**
+| Tecnologia       | Versão        |
+|------------------|---------------|
+| Node.js          | v18+ (recomendado) |
+| Express          | `^5.1.0`      |
+| TypeScript       | `^5.8.3`      |
+| Prisma ORM       | `^6.12.0`     |
+| PostgreSQL (pg)  | `^8.16.3`     |
+| Swagger UI       | `swagger-jsdoc` `^6.2.8` + `swagger-ui-express` `^5.0.1` |
+| Jest             | `^30.0.5`     |5`
 
 ---
 
