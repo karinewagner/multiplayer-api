@@ -1,5 +1,5 @@
 import { ConflictError } from '../errors/conflict.error';
-import { NotFoundError } from '../errors/notFound.error';
+import { NotFoundError } from '../errors/not-found.error';
 import { ValidationError } from '../errors/validation.error';
 import { MatchRepository } from '../repositories/match.repository';
 import { PlayerRepository } from '../repositories/player.repository';

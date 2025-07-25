@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Prisma } from '@prisma/client';
 
 import { PlayerRepository } from '../repositories/player.repository';
-import { NotFoundError } from '../errors/notFound.error';
+import { NotFoundError } from '../errors/not-found.error';
 import { ConflictError } from '../errors/conflict.error';
 import { ValidationError } from '../errors/validation.error';
 

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { MatchRepository } from '../repositories/match.repository';
 import { MatchService } from '../services/match.service';
 
-import { NotFoundError } from '../errors/notFound.error';
+import { NotFoundError } from '../errors/not-found.error';
 import { ConflictError } from '../errors/conflict.error';
 import { ValidationError } from '../errors/validation.error';
 

@@ -1,6 +1,6 @@
 import { prisma } from '../database/prisma';
 import { Player } from '@prisma/client';
-import { NotFoundError } from '../errors/notFound.error';
+import { NotFoundError } from '../errors/not-found.error';
 import { ValidationError } from '../errors/validation.error';
 
 export const PlayerRepository = {
