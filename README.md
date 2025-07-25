@@ -1,6 +1,6 @@
 # 🎮 Multiplayer API
 
-Uma API REST para gerenciar partidas multiplayer, permitindo cadastrar jogadores, criar partidas, adicionar/remover jogadores, iniciar e finalizar partidas com pontuações.
+Uma API REST para gerenciar partidas multiplayer, permitindo efetuar o CRUD de jogadores, criar partidas, adicionar/remover jogadores, iniciar e finalizar partidas com pontuações.
 
 ---
 
@@ -11,6 +11,7 @@ Uma API REST para gerenciar partidas multiplayer, permitindo cadastrar jogadores
 - **Prisma ORM**
 - **Postgres**
 - **Swagger UI**
+- **Jest**
 
 ---
 
@@ -36,16 +37,21 @@ Uma API REST para gerenciar partidas multiplayer, permitindo cadastrar jogadores
 ```
 src/
  ├── config/         # Configuração Swagger
- ├── controllers/    # Lida com as requisições HTTP
+ ├── controllers/    # Controllers das requisições HTTP
  ├── database/       # Instância e configuração de conexão com o banco de dados
+ ├── erros/          # Middlewares para tratamento de erros
  ├── middlewares/    # Middlewares para validações e tratamento de requisições
  ├── repositories/   # Acesso ao banco via Prisma
  ├── routes/         # Definições das rotas
  ├── services/       # Contém a lógica de negócio
+ ├── types/          # Arquivos de tipagem 
  ├── app.ts          # Configuração principal do servidor
 prisma/
  ├── migrations/     # Histórico das migrações aplicadas ao banco
  ├── schema.prisma   # Definição do schema do banco de dados
+tests/
+ ├── integration/    # Testes de integração
+ ├── unit/           # Testes unitários
 ```
 
 ---
@@ -88,10 +94,11 @@ O Swagger estará disponível em:
 
 ---
 ## **🌐 API hospedada (Render)**
-Você pode acessar a API pronta sem rodar nada localmente:
+Este projeto incorpora práticas de DevOps ao integrar uma pipeline de Integração Contínua e Entrega Contínua (CI/CD). A cada novo commit no repositório, o pipeline executa os testes (unitário e de integração) e atualizações, disponibilizando automaticamente uma nova versão da API na plataforma Render. Isso elimina a necessidade de execução local e garante entregas rápidas, confiáveis e rastreáveis.
 
-🔗 Swagger: **https://sua-api-no-render.onrender.com/api-docs**
+🔗 Swagger: **https://multiplayer-api.onrender.com/api-docs/**
 
+>OBS: Como a API está hospedada em uma plataforma gratuita (Render), a instância pode entrar em modo de hibernação após um período de inatividade. Nesse caso, o primeiro acesso pode levar alguns segundos para que o serviço seja reativado. Aguarde até o carregamento completo da página.
 ---
 
 ## **🧪 Rotas Principais**
@@ -110,11 +117,12 @@ Você pode acessar a API pronta sem rodar nada localmente:
 - **POST** `/matches/:matchId/finish` – Finalizar partida com `scores`
 
 ---
+## **📖 Cobertura de testes**
+Abaixo está o relatório de cobertura de testes gerado automaticamente, demonstrando a abrangência dos testes unitários e de integração implementados no projeto:
 
-## **📖 Documentação**
-- [Prisma ORM](https://www.prisma.io/docs/)
-- [Express](https://expressjs.com/)
+![Relatório de Cobertura de Testes](./assets/cobertura-testes.png)
 
+> A cobertura é verificada a cada execução da pipeline CI/CD, garantindo a confiabilidade contínua do código.
 ---
 
 ## **📜 Licença**
