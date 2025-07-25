@@ -1,12 +1,11 @@
 import { MatchService } from '../../../src/services/match.service';
 import { MatchRepository } from '../../../src/repositories/match.repository';
 import { PlayerRepository } from '../../../src/repositories/player.repository';
-import { Match, MatchState, Player } from '@prisma/client';
+import { MatchState, Player } from '@prisma/client';
+import { MatchWithPlayers } from '../../../src/types/match.type';
 
 jest.mock('../../../src/repositories/match.repository');
 jest.mock('../../../src/repositories/player.repository');
-
-type MatchWithPlayers = Match & { players: Player[] };
 
 const matchId = 'match-123';
 const playerId = 'player-1';
