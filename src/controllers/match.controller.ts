@@ -31,9 +31,8 @@ export const MatchController = {
     }
 
     const match = await MatchRepository.createMatch(name);
-    const { id, ...matchView } = match;
 
-    res.status(201).json(matchView);
+    res.status(201).json(match);
   },
 
   getOpenMatches: async (req: Request, res: Response) => {
@@ -43,8 +42,7 @@ export const MatchController = {
       throw new NotFoundError('Nenhuma partida aberta encontrada.');
     }
 
-    const matchesView = matches.map(({ id, ...rest }) => rest);
-    res.status(200).json(matchesView);
+    res.status(200).json(matches);
   },
 
   getPlayerHistory: async (req: Request, res: Response) => {

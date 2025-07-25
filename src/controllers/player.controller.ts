@@ -22,8 +22,8 @@ export const PlayerController = {
 
     try {
       const player = await PlayerRepository.createPlayer({ name, nickname, email, matchId });
-      const { id, ...playerView } = player;
-      res.status(201).json(playerView);
+
+      res.status(201).json(player);
     } catch (error: any) {
       if (error.code === 'P2002') {
         const field = Array.isArray(error.meta?.target) ? error.meta.target[0] : undefined;
@@ -42,10 +42,10 @@ export const PlayerController = {
 
   getPlayerById: async (req: Request, res: Response) => {
     const player = await PlayerRepository.findPlayerById(req.params.id);
+
     if (!player) throw new NotFoundError('Jogador não localizado');
 
-    const { id, ...playerView } = player;
-    res.status(200).json(playerView);
+    res.status(200).json(player);
   },
 
   updatePlayerById: async (req: Request, res: Response) => {
@@ -57,11 +57,9 @@ export const PlayerController = {
 
     const player = await PlayerRepository.updatePlayerById(playerId, req.body);
 
-    const { id, ...playerView } = player;
-
     res.status(200).json({
       message: 'Dados atualizados com sucesso!',
-      updatePlayer: playerView,
+      updatePlayer: player,
     });
   },
 
