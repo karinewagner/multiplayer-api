@@ -25,6 +25,9 @@ jobs:
       - name: 🔄 Aplicar migrações Prisma
         run: npx prisma migrate deploy
 
+      - name: ✅ Executar testes
+        run: npm test  # ou test:integration, test:cov
+
       - name: 🏗️ Build do projeto
         run: npm run build
 
