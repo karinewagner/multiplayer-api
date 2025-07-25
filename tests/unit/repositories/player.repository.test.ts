@@ -1,6 +1,6 @@
 import { PlayerRepository } from '../../../src/repositories/player.repository';
 import { prisma } from '../../../src/database/prisma';
-import { NotFoundError } from '../../../src/errors/notFound.error';
+import { NotFoundError } from '../../../src/errors/not-found.error';
 import { ValidationError } from '../../../src/errors/validation.error';
 
 jest.mock('../../../src/database/prisma', () => ({
