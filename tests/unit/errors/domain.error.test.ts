@@ -8,7 +8,7 @@ describe('DomainError', () => {
     expect(error).toBeInstanceOf(Error);
 
     expect(error.message).toBe('Erro genérico');
-    expect(error.statusCode).toBe(400); // padrão
+    expect(error.statusCode).toBe(400);
     expect(error.name).toBe('DomainError');
     expect(error.stack).toBeDefined();
   });

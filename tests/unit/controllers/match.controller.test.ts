@@ -152,7 +152,7 @@ describe('MatchController - getPlayerHistory', () => {
   it('deve retornar erro 400 se o ID do jogador estiver ausente', async () => {
     const res = await request(app).get('/matches/history/');
 
-    expect(res.statusCode).toBe(404); // rota inválida, não entra no controller
+    expect(res.statusCode).toBe(404);
   });
 
   it('deve retornar erro 404 se não houver histórico', async () => {
