@@ -75,6 +75,7 @@ describe('MatchController - createNewMatch', () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual({
+      id: '1',
       name: 'Nova Partida',
       state: 'WAITING',
     });
@@ -116,8 +117,8 @@ describe('MatchController - getOpenMatches', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual([
-      { name: 'Match A', state: 'WAITING' },
-      { name: 'Match B', state: 'WAITING' },
+      { id: '1', name: 'Match A', state: 'WAITING' },
+      { id: '2', name: 'Match B', state: 'WAITING' },
     ]);
   });
 

@@ -73,6 +73,7 @@ describe('PlayerController - createPlayer', () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual({
+      id: '1',
       name: 'John',
       nickname: 'johnny',
       email: 'john@example.com',
@@ -164,6 +165,7 @@ describe('PlayerController - getPlayerById', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({
+      id: '1',
       name: 'Maria',
       nickname: 'mari',
       email: 'maria@example.com',
@@ -202,6 +204,7 @@ describe('PlayerController - updatePlayerById', () => {
     expect(res.body).toEqual({
       message: 'Dados atualizados com sucesso!',
       updatePlayer: {
+        id: '1',
         name: 'Maria Eduarda',
         nickname: 'mari_edu',
         email: 'mari@email.com',

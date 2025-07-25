@@ -44,7 +44,6 @@ describe('POST /matches - Integração (mock)', () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('name', 'Nova Partida');
-    expect(res.body).not.toHaveProperty('id');
   });
 
   it('deve retornar erro 400 se o nome da partida for inválido', async () => {

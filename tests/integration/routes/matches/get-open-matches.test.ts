@@ -52,7 +52,6 @@ describe('GET /matches/open - Integração (mock)', () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveLength(2);
-    expect(res.body[0]).not.toHaveProperty('id');
     expect(res.body[0]).toHaveProperty('name');
   });
 

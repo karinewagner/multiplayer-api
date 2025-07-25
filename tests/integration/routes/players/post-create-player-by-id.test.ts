@@ -41,6 +41,7 @@ describe('POST /players - Integração (mock)', () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual({
+      id: '1',
       name: 'Carlos',
       nickname: 'carlao',
       email: 'carlos@email.com',

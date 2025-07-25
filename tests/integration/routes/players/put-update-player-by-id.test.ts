@@ -44,6 +44,7 @@ describe('PUT /players/:id - Integração (mock)', () => {
     expect(res.body).toEqual({
       message: 'Dados atualizados com sucesso!',
       updatePlayer: {
+        id: '1',
         name: 'Carlos Atualizado',
         nickname: 'carluxo',
         email: 'carluxo@email.com'
