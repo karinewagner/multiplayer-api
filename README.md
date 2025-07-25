@@ -1,6 +1,20 @@
 # 🎮 Multiplayer API
 
-Uma API REST para gerenciar partidas multiplayer, permitindo efetuar o CRUD de jogadores, criar partidas, adicionar/remover jogadores, iniciar e finalizar partidas com pontuações.
+Este projeto trata-se de uma avaliação prática para vaga de desenvolvedor backend. O produto do projeto é uma API REST para gerenciar partidas multiplayer, permitindo efetuar o CRUD de jogadores, criar partidas, adicionar/remover jogadores, iniciar e finalizar partidas com pontuações.
+
+O tempo gasto para desenvolvimento do mesmo foi de cerca de 22 horas no período de 5 dias. Podendo ser melhor detalhadas da seguinte maneira:
+ - Início do projeto, configuração e desenvolvimento das features: ~10hrs;
+ - Concepção e ajustes da pipeline: ~5hrs;
+ - Confecção dos testes unitários e de integração: ~5hrs;
+ - Pequenos refinos e documentação (README): ~2hrs;
+
+## 🚧 Desafios Encontrados e Decisões Técnicas
+
+Durante o desenvolvimento, optei inicialmente pelo uso do **SQLite** por sua praticidade em ambiente local. Contudo, ao decidir implementar uma **pipeline automatizada de CI/CD** com deploy na plataforma **Render**, surgiram limitações relacionadas ao uso do SQLite no ambiente de produção — especialmente na aplicação de **migrations** e acesso concorrente ao banco.
+
+Para contornar esses obstáculos e garantir uma experiência mais fluida para a equipe avaliativa (possibilitando testes diretamente no navegador), tomei a iniciativa de **migrar para o PostgreSQL**, configurando um banco de dados remoto na nuvem.  
+
+Embora a entrega da esteira de CI/CD **não fosse um requisito da avaliação**, decidi incluí-la como diferencial, por entender que é uma prática amplamente adotada no mercado e representa um ganho real em automação, segurança e facilidade de testes.
 
 ---
 
